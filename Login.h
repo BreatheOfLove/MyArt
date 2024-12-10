@@ -17,7 +17,7 @@ struct User {
 
 };
 
-vector<User> loadUsers(string& filename);
+vector<User> loadUsers(const string& filename);
 bool login(const vector<User>& users, const string& username, const string& password);
 void addUser(vector<User>& users, const string& username, const string& password, bool isAdmin);
 void saveUsers(const string& filename, const vector<User>& users);
