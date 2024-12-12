@@ -1,21 +1,16 @@
+#include <iostream>
+#include <fstream>
 #include "Login.h"
 
-struct User {
-	string username;
-	string password;
-	bool isAdmin;
+User User::load(ifstream& in) {
+	User user;
+	in >> user.username >> user.password >> user.isAdmin;
+	return user;
+}
 
-	static User load(ifstream& in) {
-		User user;
-		in >> user.username >> user.password >> user.isAdmin;
-		return user;
-	}
-
-	void save(ofstream& out) const {
-		out << username << " " << password << " " << isAdmin << endl;
-	}
-
-};
+void User::save(ofstream& out) const {
+	out << username << " " << password << " " << isAdmin << endl;
+}
 
 vector<User> loadUsers(string& filename) {
 	vector<User> users;
@@ -57,7 +52,7 @@ void saveUsers(const string& filename, const vector<User>& users) {
 	file.close();
 }
 
-void Login()
+void _main_()
 {
 	string filename = "users.txt";
 	vector<User> users = loadUsers(filename);
@@ -69,9 +64,9 @@ void Login()
 
 		if (choice == 1) {
 			string username, password;
-			cout << "Enter username: ";
+			cout << "Введите логин: ";
 			cin >> username;
-			cout << "Enter password: ";
+			cout << "Введите пароль: ";
 			cin >> password;
 
 			login(users, username, password);
@@ -79,11 +74,11 @@ void Login()
 		else if (choice == 2) {
 			string username, password;
 			bool isAdmin;
-			cout << "Enter new username: ";
+			cout << "Введите новый логин: ";
 			cin >> username;
-			cout << "Enter new password: ";
+			cout << "Введите новый пароль: ";
 			cin >> password;
-			cout << "Is admin? (1 / 0): ";
+			cout << "Админ(1, 0): ";
 			cin >> isAdmin;
 
 			addUser(users, username, password, isAdmin);
