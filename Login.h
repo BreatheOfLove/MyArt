@@ -1,24 +1,19 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include "Menu.h"
+#include <string> 
+#include <vector> 
 using namespace std;
 
 struct User {
-	string username;
-	string password;
-	bool isAdmin;
+    string username;
+    string password;
+    bool isAdmin;
 
-	static User load(ifstream& in);
-
-	void save(ofstream& out) const;
-
+    static User load(ifstream& in);
+    void save(ofstream& out) const;
 };
 
 vector<User> loadUsers(const string& filename);
 bool login(const vector<User>& users, const string& username, const string& password);
 void addUser(vector<User>& users, const string& username, const string& password, bool isAdmin);
 void saveUsers(const string& filename, const vector<User>& users);
-void Login();
+void _main_();
