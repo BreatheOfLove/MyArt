@@ -64,9 +64,9 @@ void _main_()
 
 		if (choice == 1) {
 			string username, password;
-			cout << "Введите логин: ";
+			cout << "Enter login: ";
 			cin >> username;
-			cout << "Введите пароль: ";
+			cout << "Enter password: ";
 			cin >> password;
 
 			login(users, username, password);
@@ -74,11 +74,11 @@ void _main_()
 		else if (choice == 2) {
 			string username, password;
 			bool isAdmin;
-			cout << "Введите новый логин: ";
+			cout << "Enter new login: ";
 			cin >> username;
-			cout << "Введите новый пароль: ";
+			cout << "Enter new password: ";
 			cin >> password;
-			cout << "Админ(1, 0): ";
+			cout << "Admin(1, 0): ";
 			cin >> isAdmin;
 
 			addUser(users, username, password, isAdmin);
