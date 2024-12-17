@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 #include "Login.h"
 
 User User::load(ifstream& in) {
@@ -12,11 +13,18 @@ void User::save(ofstream& out) const {
 	out << username << " " << password << " " << isAdmin << endl;
 }
 
-vector<User> loadUsers(string& filename) {
+vector<User> loadUsers(const string& filename) {
 	vector<User> users;
 	ifstream file(filename);
-	while (!file.eof()) {
+	if (!file.is_open()) {
+		cerr << "Не удалось открыть файл: " << filename << endl;
+		return users;
+	}
+	while (true) {
 		User user = User::load(file);
+		if (file.fail()) {
+			break;
+		}
 		users.push_back(user);
 	}
 	file.close();
@@ -40,8 +48,13 @@ bool login(const vector<User>& users, const string& username, const string& pass
 }
 
 void addUser(vector<User>& users, const string& username, const string& password, bool isAdmin) {
-	users.push_back(User{ username, password, isAdmin });
-	cout << "User " << username << " added.\n";
+	users.push_back(User{username, password, isAdmin});
+	if (isAdmin) {
+		cout << "Admin " << username << " added.\n";
+	}
+	else {
+		cout << "User " << username << " added.\n";
+	}
 }
 
 void saveUsers(const string& filename, const vector<User>& users) {
@@ -54,12 +67,14 @@ void saveUsers(const string& filename, const vector<User>& users) {
 
 void _main_()
 {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	string filename = "users.txt";
-	vector<User> users = loadUsers(filename);
+	vector <User> users = loadUsers(filename);
 
 	int choice;
 	do {
-		cout << "\nMenu:\n1. Login\n2. Add User\n 3.Save and exit\nEnter choice: ";
+		cout << "Меню:\n1. Login\n2. Add User\n3. Save and exit\nEnter choice: ";
 		cin >> choice;
 
 		if (choice == 1) {
@@ -85,7 +100,7 @@ void _main_()
 			saveUsers(filename, users);
 		}
 		else if (choice == 3) {
-			exit(0);
+			return;
 		}
 
 	} while (choice != 3);

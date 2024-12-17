@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 #include "Library.h"
 
 Content Content::load(ifstream& in) {
@@ -12,20 +13,107 @@ void Content::save(ofstream& out) const {
 	out << name << " " << genre << " " << type << endl;
 }
 
-vector<Content> loadContent(string& filename) {
+string userRepetition(const vector<Content>& contents) {
+	while (true) {
+		for (const Content& content : contents) {
+			string name;
+			cout << "Введите название: ";
+			cin >> name;
+			if (content.name == name) {
+				cout << "Введите другое название. Это занято." << endl;
+			}
+			else { return name; }
+		}
+	}
+}
+
+string switchGenre() {
+	do {
+		int choice;
+		cout << "1. Драма" << endl
+			<< "2. Триллер" << endl
+			<< "3. Комедия" << endl
+			<< "4. Ужасы" << endl
+			<< "5. Боевик" << endl
+			<< "Введите действие: ";
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			return "Драма";
+			break;
+		case 2:
+			return "Триллер";
+			break;
+		case 3:
+			return "Комедия";
+			break;
+		case 4:
+			return "Ужасы";
+			break;
+		case 5:
+			return "Боевик";
+			break;
+		default:
+			cout << "Неверное действие";
+			break;
+		}
+
+	} while (true);
+}
+
+string switchType() {
+	do {
+		int choice;
+		cout << "\n1. Фильм" << endl
+			<< "2. Сериал" << endl
+			<< "3. Музыка" << endl
+			<< "4. Онлайн-книга" << endl
+			<< "Введите действие: ";
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			return "Фильм";
+			break;
+		case 2:
+			return "Сериал";
+			break;
+		case 3:
+			return "Музыка";
+			break;
+		case 4:
+			return "Онлайн-книга";
+			break;
+		default:
+			cout << "Неверное действие";
+			break;
+		}
+		
+	} while (true);
+}
+
+vector<Content> loadContent(const string& filename) {
 	vector<Content> contents;
 	ifstream file(filename);
-	while (!file.eof()) {
+	if (!file.is_open()) {
+		cerr << "Не удалось открыть файл: " << filename << endl;
+		return contents;
+	}
+	while (true) {
 		Content content = Content::load(file);
+		if (file.fail()) {
+			break;
+		}
 		contents.push_back(content);
 	}
 	file.close();
 	return contents;
-} 
+}
 
 void addContent(vector<Content>& contents, const string& name, const string& genre, const string& type) {
 	contents.push_back(Content{ name, genre, type });
-	cout << genre << name << " added.\n";
+	cout << genre << " " << name << " added.\n";
 }
 
 void saveContent(const string& filename, const vector<Content>& contents) {
@@ -38,22 +126,22 @@ void saveContent(const string& filename, const vector<Content>& contents) {
 
 void _mC_()
 {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	string filename = "library.txt";
 	vector<Content> contents = loadContent(filename);
 
 	int choice;
 	do {
-		cout << "\nMenu:\n1. Add\n0. Save and exit\nEnter choice: ";
+		cout << "Меню\n1. Добавить\n0. Сохранить и выйти\nВведите: ";
 		cin >> choice;
 
 		if (choice == 1) {
 			string name, genre, type;
-			cout << "Enter name: ";
-			cin >> name;
-			cout << "Enter genre: ";
-			cin >> genre;
-			cout << "Type: ";
-			cin >> type;
+
+			name = userRepetition(contents);
+			genre = switchGenre();
+			type = switchType();
 
 			addContent(contents, name, genre, type);
 			saveContent(filename, contents);
