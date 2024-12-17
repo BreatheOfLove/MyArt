@@ -55,7 +55,7 @@ void _mC_()
 			cout << "Type: ";
 			cin >> type;
 
-			addContent(name, genre, type);
+			addContent(contents, name, genre, type);
 			saveContent(filename, contents);
 		}
 		else if (choice == 0) {
