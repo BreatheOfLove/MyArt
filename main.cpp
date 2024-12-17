@@ -1,12 +1,11 @@
 #include <iostream>
-#include <string>
 #include "classMusic.h"
 #include "classMovies.h"
 #include "classSerials.h"
 #include "classBooks.h"
 #include "Login.h"
+#include "Library.h"
 #include "Menu.h"
-using namespace std;
 
 class OnlineArt : protected Movies,
     protected Serials,
@@ -16,5 +15,6 @@ public:
 };
 
 int main() {
-    setlocale(LC_ALL, "rus");
+    _Main_();
+    _mC();
 }
