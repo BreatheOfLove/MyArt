@@ -14,22 +14,25 @@ void Content::save(ofstream& out) const {
 }
 
 string userRepetition(const vector<Content>& contents) {
-	while (true) {
+	string name;
+	bool isRepetition = false;
+	do {
+		cout << "Введите название: ";
+		cin >> name;
 		for (const Content& content : contents) {
-			string name;
-			cout << "Введите название: ";
-			cin >> name;
 			if (content.name == name) {
 				cout << "Введите другое название. Это занято." << endl;
+				isRepetition = true;
+				break;
 			}
-			else { return name; }
 		}
-	}
+		if (!isRepetition) {return name;}
+	} while (true);
 }
 
 string switchGenre() {
+	int choice;
 	do {
-		int choice;
 		cout << "1. Драма" << endl
 			<< "2. Триллер" << endl
 			<< "3. Комедия" << endl
@@ -63,8 +66,8 @@ string switchGenre() {
 }
 
 string switchType() {
+	int choice;
 	do {
-		int choice;
 		cout << "\n1. Фильм" << endl
 			<< "2. Сериал" << endl
 			<< "3. Музыка" << endl

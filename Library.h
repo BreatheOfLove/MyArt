@@ -12,6 +12,10 @@ struct Content {
     void save(ofstream& out) const;
 };
 
+string userRepetition(const vector<Content>& contents);
+string switchGenre();
+string switchType();
+
 vector<Content> loadContent(const string& filename);
 void addContent(vector<Content>& contents, const string& name, const string& genre, const string& type);
 void saveContent(const string& filename, const vector<Content>& contents);

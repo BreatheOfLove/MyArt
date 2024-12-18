@@ -5,12 +5,12 @@
 
 User User::load(ifstream& in) {
 	User user;
-	in >> user.username >> user.password >> user.isAdmin;
+	in >> user.username >> user.hashPass >> user.isAdmin;
 	return user;
 }
 
 void User::save(ofstream& out) const {
-	out << username << " " << password << " " << isAdmin << endl;
+	out << username << " " << hashPass << " " << isAdmin << endl;
 }
 
 vector<User> loadUsers(const string& filename) {
@@ -31,9 +31,9 @@ vector<User> loadUsers(const string& filename) {
 	return users;
 }
 
-bool login(const vector<User>& users, const string& username, const string& password) {
+bool login(const vector<User>& users, const string& username, hash <string>& hashPass) {
 	for (const User& user : users) {
-		if (user.username == username && user.password == password) {
+		if (user.username == username && user.hashPass == hashPass) {
 			if (user.isAdmin) {
 				cout << "Hello admin" << endl;
 			}
@@ -47,8 +47,8 @@ bool login(const vector<User>& users, const string& username, const string& pass
 	return false;
 }
 
-void addUser(vector<User>& users, const string& username, const string& password, bool isAdmin) {
-	users.push_back(User{username, password, isAdmin});
+void addUser(vector<User>& users, const string& username, hash <string>& hashPass, bool isAdmin) {
+	users.push_back(User{username, hashPass, isAdmin});
 	if (isAdmin) {
 		cout << "Admin " << username << " added.\n";
 	}
@@ -67,8 +67,6 @@ void saveUsers(const string& filename, const vector<User>& users) {
 
 void _main_()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
 	string filename = "users.txt";
 	vector <User> users = loadUsers(filename);
 
@@ -79,16 +77,22 @@ void _main_()
 
 		if (choice == 1) {
 			string username, password;
+			hash <string> hashPass;
+
 			cout << "Enter login: ";
 			cin >> username;
 			cout << "Enter password: ";
 			cin >> password;
+			 
+			hashPass(password);
 
-			login(users, username, password);
+			login(users, username, hashPass);
 		}
 		else if (choice == 2) {
 			string username, password;
+			hash <string> hashPass;
 			bool isAdmin;
+
 			cout << "Enter new login: ";
 			cin >> username;
 			cout << "Enter new password: ";
@@ -96,7 +100,9 @@ void _main_()
 			cout << "Admin(1, 0): ";
 			cin >> isAdmin;
 
-			addUser(users, username, password, isAdmin);
+			hashPass(password);
+
+			addUser(users, username, hashPass, isAdmin);
 			saveUsers(filename, users);
 		}
 		else if (choice == 3) {
