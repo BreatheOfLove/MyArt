@@ -1,4 +1,6 @@
 #pragma once
 
-void userMenu();
+void mainMenu();
+void authMenu();
+void contentMenu();
 void adminMenu();

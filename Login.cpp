@@ -1,16 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
+#include <sstream>
 #include "Login.h"
 
 User User::load(ifstream& in) {
 	User user;
-	in >> user.username >> user.hashPass >> user.isAdmin;
+	in >> user.username >> user.ss;
 	return user;
 }
 
 void User::save(ofstream& out) const {
-	out << username << " " << hashPass << " " << isAdmin << endl;
+	out << username << " " << ss << " " << endl;
 }
 
 vector<User> loadUsers(const string& filename) {
@@ -31,15 +32,10 @@ vector<User> loadUsers(const string& filename) {
 	return users;
 }
 
-bool login(const vector<User>& users, const string& username, hash <string>& hashPass) {
+bool login(const vector<User>& users, const string& username, const string& ss) {
 	for (const User& user : users) {
-		if (user.username == username && user.hashPass == hashPass) {
-			if (user.isAdmin) {
-				cout << "Hello admin" << endl;
-			}
-			else {
-				cout << "Hello user" << endl;
-			}
+		if (user.username == username && user.ss == ss) {
+			cout << "Hello user" << endl;
 			return true;
 		}
 	}
@@ -47,14 +43,9 @@ bool login(const vector<User>& users, const string& username, hash <string>& has
 	return false;
 }
 
-void addUser(vector<User>& users, const string& username, hash <string>& hashPass, bool isAdmin) {
-	users.push_back(User{username, hashPass, isAdmin});
-	if (isAdmin) {
-		cout << "Admin " << username << " added.\n";
-	}
-	else {
-		cout << "User " << username << " added.\n";
-	}
+void addUser(vector<User>& users, const string& username, const string& ss) {
+	users.push_back(User{username, ss});
+	cout << "User " << username << " added.\n";
 }
 
 void saveUsers(const string& filename, const vector<User>& users) {
@@ -72,7 +63,7 @@ void _main_()
 
 	int choice;
 	do {
-		cout << "Меню:\n1. Login\n2. Add User\n3. Save and exit\nEnter choice: ";
+		cout << "Меню:\n1. Login\n2. Registration\n3. Save and exit\nEnter choice: ";
 		cin >> choice;
 
 		if (choice == 1) {
@@ -84,25 +75,26 @@ void _main_()
 			cout << "Enter password: ";
 			cin >> password;
 			 
-			hashPass(password);
+			size_t hash = hashPass(password);
+			stringstream ss;
+			ss << hex << hash;
 
-			login(users, username, hashPass);
+			login(users, username, ss.str());
 		}
 		else if (choice == 2) {
 			string username, password;
 			hash <string> hashPass;
-			bool isAdmin;
 
 			cout << "Enter new login: ";
 			cin >> username;
 			cout << "Enter new password: ";
 			cin >> password;
-			cout << "Admin(1, 0): ";
-			cin >> isAdmin;
 
-			hashPass(password);
+			size_t hash = hashPass(password);
+			stringstream ss;
+			ss << hex << hash;
 
-			addUser(users, username, hashPass, isAdmin);
+			addUser(users, username, ss.str());
 			saveUsers(filename, users);
 		}
 		else if (choice == 3) {
