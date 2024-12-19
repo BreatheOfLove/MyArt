@@ -15,6 +15,6 @@ public:
 };
 
 int main() {
-    _Main_();
+    mainMenu();
     _mC();
 }
